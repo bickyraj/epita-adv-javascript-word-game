@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const mongoose = require ('mongoose');
 const session = require('express-session')
+require('dotenv').config();
 
 try {
     mongoose.connect(process.env.MONGODB);
