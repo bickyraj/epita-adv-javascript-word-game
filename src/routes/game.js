@@ -1,6 +1,7 @@
 const express = require('express');
 const WordModel = require('../models/word');
 const GameModel = require("../models/game");
+const { compareAlphabetsBetweenWords } = require('../utils');
 
 const Router = express.Router();
 
@@ -12,6 +13,33 @@ const isLogged = (request, response, next) => {
         return response.status(500).json({'msg': "not logged !"})
     }
 }
+
+Router.get('/new', async (request, response) => {
+  // get a random words from the words.
+  const word = await WordModel.aggregate([{
+    $sample: { size: 1 }
+  }]);
+
+  return response.status(200).json({ 'data': {
+    id: word[0]._id,
+    word: word[0].name
+  }})
+});
+
+Router.post('/try', async (request, response) => {
+  // get a random words from the words.
+  const { id, word } = request.body; 
+
+  const wordModel = await WordModel.findById(id);
+  console.log(wordModel);
+
+  const result = compareAlphabetsBetweenWords(wordModel.name, word);
+
+  return response.status(200).json({
+    "word": word,
+    "response": result,
+  })
+});
 
 Router.post('/', async (request, response) => {
     const word = await WordModel.aggregate([{
