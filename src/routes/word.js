@@ -4,6 +4,18 @@ const Router = express.Router();
 const WordModel = require('../models/word');
 const { jsonResponse } = require('../utils');
 
+// get specific word
+
+Router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+  const word = await WordModel.findById(id);
+  if (!word) {
+    return jsonResponse(res, 400, null, 'word not found');
+  } else {
+    return jsonResponse(res, 200, word, 'word fetched successfully');
+  }
+});
+
 // create word
 Router.post('/', async (request, response) => {
   const { word } = request.body;
@@ -38,14 +50,14 @@ Router.put('/:id', async (req, res) => {
 Router.delete('/:id', async (req, res) => {
   const id = req.params.id;
   try {
-    const deletedWord = await WordModel.findByIdAndDelete(id);
-    if (!deletedWord) {
+    const word = await WordModel.findByIdAndDelete(id);
+    if (!word) {
       return jsonResponse(res, 404, null, 'word not found');
     } else {
-      return jsonResponse(res, 200, deletedWord.name, 'word deleted successfully');
+      return jsonResponse(res, 200, word.name, 'word deleted successfully');
     }
   } catch (error) {
-    console.error('Failed to delete word:', error);
+    console.error(error);
     return jsonResponse(res, 500, null, 'failed to delete word.');
   }
 });
