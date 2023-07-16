@@ -34,11 +34,7 @@ App.use(session({
 }));
 
 App.get('/', (request, response) => {
-    return response.status(200).send('<h1>It works From GET !</h1>');
-});
-
-App.post('/', (request, response) => {
-    return response.status(200).send('<h1>It works from POST !</h1>');
+    return response.status(200).send('<h1>Welcome to Word Guess</h1>');
 });
 
 App.use('/game', verifyToken, GameRoutes);

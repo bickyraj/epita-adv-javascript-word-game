@@ -4,8 +4,14 @@ const Router = express.Router();
 const WordModel = require('../models/word');
 const { jsonResponse } = require('../utils');
 
-// get specific word
+// get all words
+Router.get('/', async (req, res) => {
+  const id = req.params.id;
+  const words = await WordModel.find();
+  return jsonResponse(res, 200, words, 'all the words fetched successfully');
+});
 
+// get specific word by id
 Router.get('/:id', async (req, res) => {
   const id = req.params.id;
   const word = await WordModel.findById(id);
