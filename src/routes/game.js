@@ -41,33 +41,33 @@ Router.post('/try', async (request, response) => {
   })
 });
 
-Router.post('/', async (request, response) => {
-    const word = await WordModel.aggregate([{
-        $sample: {size: 1}
-    }]);
+// Router.post('/', async (request, response) => {
+//     const word = await WordModel.aggregate([{
+//         $sample: {size: 1}
+//     }]);
 
-    let game = new GameModel({
-        word: word[0]._id,
-        tries: [],
-        user: request.session.user._id
-    });
+//     let game = new GameModel({
+//         word: word[0]._id,
+//         tries: [],
+//         user: request.session.user._id
+//     });
 
-    try {
-        await game.save();
+//     try {
+//         await game.save();
 
-        game = await GameModel.find({
-            _id: game._id
-        }).populate('user').populate('word')
+//         game = await GameModel.find({
+//             _id: game._id
+//         }).populate('user').populate('word')
 
-        return response.status(200).json({
-            "msg": game
-        });
-    } catch (error) {
-        return response.status(500).json({
-            "error": error.message
-        });
-    }
-});
+//         return response.status(200).json({
+//             "msg": game
+//         });
+//     } catch (error) {
+//         return response.status(500).json({
+//             "error": error.message
+//         });
+//     }
+// });
 
 Router.get('/:id', async (request, response) => {
     const {id} = request.params;
