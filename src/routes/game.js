@@ -2,19 +2,19 @@ const express = require('express');
 const WordModel = require('../models/word');
 const GameModel = require("../models/game");
 const { compareAlphabetsBetweenWords } = require('../utils');
+const { verifyToken } = require('../tools');
 
 const Router = express.Router();
 
 const isLogged = (request, response, next) => {
     if (request.session.user) {
-        console.log('test');
         next();
     } else {
         return response.status(500).json({'msg': "not logged !"})
     }
 }
 
-Router.get('/new', async (request, response) => {
+Router.get('/new', verifyToken, async (request, response) => {
   // get a random words from the words.
   const word = await WordModel.aggregate([{
     $sample: { size: 1 }

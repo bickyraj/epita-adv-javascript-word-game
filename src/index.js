@@ -23,7 +23,7 @@ App.use(helmet());
 App.use(morgan('common'));
 App.use(express.json());
 App.use(session({
-    secret: 'keyboard cat',
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { 
