@@ -21,43 +21,63 @@ Router.get('/new', isLogged, async (request, response) => {
     $sample: { size: 1 }
   }]);
 
-  const user = request.session.user;
-  const game = new GameModel({
-    word: word[0]._id,
-    user: user._id,
-    tries: []
-  });
-  await game.save();
-  return response.status(200).json({
-    'word': word[0].name,
-    "game": game,
-    "message": "game created"
-  });
+  console.log(word);
+  if (word.length < 1) {
+    return response.status(200).json({
+      "message": "no game created yet."
+    });
+  } else {
+    const user = request.session.user;
+    const game = new GameModel({
+      word: word[0]._id,
+      user: user._id,
+      tries: []
+    });
+    await game.save();
+    return response.status(200).json({
+      'word': word[0].name,
+      "game": game,
+      "message": "game created"
+    });
+  }
+
 });
 
-Router.post('/try', async (request, response) => {
+Router.post('/verify', isLogged, async (request, response) => {
   // get a random words from the words.
   const { word_id, game_id, word } = request.body;
   const wordModel = await WordModel.findById(word_id);
-  const gameModel = await GameModel.findById(game_id);
-
-  const result = compareAlphabetsBetweenWords(wordModel.name, word);
-  let newTry = await new TryModel({
-    word: word_id,
-    result: result
-  }).save();
-
-  gameModel.tries.push(newTry);
-
-  try {
-    const updatedGame = await gameModel.save();
-    return response.status(200).json({
-      "word": word,
-      "response": result,
-      "game": updatedGame
+  const gameModel = await GameModel.findById(game_id).populate('tries user');
+  if (!wordModel || !gameModel) {
+    return response.status(500).json({
+      "message": "something went wrong. Please try again."
     });
-  } catch (error) {
-    console.error(error);
+  }
+  const resultData = compareAlphabetsBetweenWords(wordModel.name, word);
+  // check lenght of the result comparison
+  if (resultData.lenghtValid) {
+    let newTry = await new TryModel({
+      word: word_id,
+      result: resultData.result
+    }).save();
+
+    gameModel.tries.push(newTry);
+
+    try {
+      const updatedGame = await gameModel.save();
+      return response.status(200).json({
+        "word": word,
+        "response": (resultData.success) ? "you found the word" : resultData.result,
+        "game": updatedGame
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  } else {
+    return response.status(500).json({
+      "word": word,
+      "response": resultData.result,
+    });
   }
 });
 
