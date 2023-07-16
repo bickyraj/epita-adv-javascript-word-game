@@ -1,8 +1,7 @@
 const express = require('express');
 const WordModel = require('../models/word');
 const GameModel = require("../models/game");
-const { compareAlphabetsBetweenWords } = require('../utils');
-const { verifyToken } = require('../tools');
+const { compareAlphabetsBetweenWords, jsonResponse } = require('../utils');
 
 const Router = express.Router();
 
@@ -14,16 +13,25 @@ const isLogged = (request, response, next) => {
     }
 }
 
-Router.get('/new', async (request, response) => {
+// create a game
+Router.get('/new', isLogged, async (request, response) => {
   // get a random words from the words.
   const word = await WordModel.aggregate([{
     $sample: { size: 1 }
   }]);
 
-  return response.status(200).json({ 'data': {
-    id: word[0]._id,
-    word: word[0].name
-  }})
+  const user = request.session.user;
+  const game = new GameModel({
+    word: word[0]._id,
+    user: user._id,
+    tries: []
+  });
+  await game.save();
+  return response.status(200).json({
+    'word': word[0].name,
+    "game": game,
+    "message": "game created"
+  });
 });
 
 Router.post('/try', async (request, response) => {
