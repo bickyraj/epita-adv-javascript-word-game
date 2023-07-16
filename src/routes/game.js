@@ -45,9 +45,9 @@ Router.get('/new', isLogged, async (request, response) => {
 
 Router.post('/verify', isLogged, async (request, response) => {
   // get a random words from the words.
-  const { word_id, game_id, word } = request.body;
-  const wordModel = await WordModel.findById(word_id);
-  const gameModel = await GameModel.findById(game_id).populate('tries user');
+  const { game_id, word } = request.body;
+  const gameModel = await GameModel.findById(game_id).populate('word tries user');
+  const wordModel = gameModel.word;
   if (!wordModel || !gameModel) {
     return response.status(500).json({
       "message": "something went wrong. Please try again."
@@ -57,7 +57,7 @@ Router.post('/verify', isLogged, async (request, response) => {
   // check lenght of the result comparison
   if (resultData.lenghtValid) {
     let newTry = await new TryModel({
-      word: word_id,
+      word: wordModel._id,
       result: resultData.result
     }).save();
 

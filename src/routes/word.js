@@ -44,7 +44,7 @@ Router.post('/', async (request, response) => {
 Router.put('/:id', async (req, res) => {
   const id = req.params.id;
   const newWord = req.body.word;
-  const word = await WordModel.findByIdAndUpdate(id, newWord, { new: true });
+  const word = await WordModel.findByIdAndUpdate(id, {name: newWord}, { new: true });
   if (!word) {
     return jsonResponse(res, 400, null, 'word not found');
   } else {
