@@ -9,7 +9,7 @@ const compareAlphabetsBetweenWords = (actualWord, tryWord) => {
   }
 
   let result = "";
-  for (let i = 0; i< tryWord.length; i++) {
+  for (let i = 0; i < tryWord.length; i++) {
     if (actualWord[i] === tryWord[i]) {
       result += "1";
     } else if (actualWord.includes(tryWord[i])) {
@@ -22,6 +22,14 @@ const compareAlphabetsBetweenWords = (actualWord, tryWord) => {
   return result;
 }
 
+const jsonResponse = (res, status, data, message) => {
+  return res.status(status).json({
+    data: data,
+    message: message
+  });
+}
+
 module.exports = {
-  compareAlphabetsBetweenWords
+  compareAlphabetsBetweenWords,
+  jsonResponse
 };

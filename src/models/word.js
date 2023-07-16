@@ -5,7 +5,7 @@ const wordSchema = new mongoose.Schema({
         type: String,
         unique: true,
         required: true,
-        minLength: [6, 'Must be at least 6, got {VALUE}'],
+        minLength: [5, 'Must be at least 5, got {VALUE}'],
         maxLength: [12, 'Must be less than 12, got {VALUE}']
     }
 }, {

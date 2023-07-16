@@ -17,6 +17,7 @@ try {
 const GameRoutes = require('./routes/game');
 const WordRoutes = require('./routes/word');
 const AuthRoutes = require('./routes/auth');
+const { verifyToken } = require('./tools');
 
 const App = express();
 App.use(helmet());
@@ -40,8 +41,8 @@ App.post('/', (request, response) => {
     return response.status(200).send('<h1>It works from POST !</h1>');
 });
 
-App.use('/game', GameRoutes);
-App.use('/word', WordRoutes);
+App.use('/game', verifyToken, GameRoutes);
+App.use('/word', verifyToken, WordRoutes);
 App.use('/auth', AuthRoutes);
 
 App.listen(process.env.PORT, () => {

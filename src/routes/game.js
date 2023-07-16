@@ -14,7 +14,7 @@ const isLogged = (request, response, next) => {
     }
 }
 
-Router.get('/new', verifyToken, async (request, response) => {
+Router.get('/new', async (request, response) => {
   // get a random words from the words.
   const word = await WordModel.aggregate([{
     $sample: { size: 1 }
