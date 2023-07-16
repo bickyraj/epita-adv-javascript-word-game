@@ -91,7 +91,7 @@ Router.get('/refresh-token', async (request, response) => {
 
         if (!rf_token) return response.status(503).json({ msg: "Not authenticated !" });
 
-        const decoded = jwt.verify(rf_token, `secret`)
+        const decoded = jwt.verify(rf_token, process.env.SECRET)
 
         if (!decoded) return response.status(503).json({ msg: "Not authenticated !" })
 

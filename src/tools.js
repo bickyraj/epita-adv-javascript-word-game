@@ -2,16 +2,17 @@ const jwt = require('jsonwebtoken');
 
 
 const generateAccessToken = (payload) => {
-  return jwt.sign({ id: payload }, proces.env.SECRET, { expiresIn: '1d' });
+  return jwt.sign({ id: payload }, process.env.SECRET, { expiresIn: '3600s' });
 }
 
 const generateRefreshToken = (payload) => {
-  return jwt.sign({ id: payload }, proces.env.SECRET, { expiresIn: '30d' });
+  return jwt.sign({ id: payload }, process.env.SECRET, { expiresIn: '30d' });
 }
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers['access_token'];
+  const access_token = req.headers['access_token'];
 
+  const token = access_token && access_token.split(' ')[1];
   if (!token) {
     return res.status(401).json({ data: null, success: false, message: 'No token provided.' });
   }
@@ -22,7 +23,7 @@ const verifyToken = (req, res, next) => {
       return res.status(403).json({ message: 'Failed to authenticate token.' });
     }
 
-    req.user = decoded;
+    req.id = decoded;
     next();
   });
 }
