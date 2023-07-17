@@ -29,3 +29,42 @@ The response should be like this
 - Add vérification to the route already created
 - Finished the verify route to send the response to the user
 - Finished the CRUD of Word
+
+## Installation
+- clone the project
+- run the command
+- docker compose up
+- npm i
+
+## Authentication
+- register user
+- login
+- login provides with response access token
+- to call the apis send the access token to header with the attribute "access_token": "Bearer ${token}"
+
+## Apis 
+
+# User api
+- http://localhost:5000/auth/register
+- http://localhost:5000/auth/login
+
+# Word apis
+- create word - post method - http://localhost:5000/word
+- udpate word - put method  - http://localhost:5000/word/:id
+- delete word - delete method - http://localhost:5000/word/:id
+
+# Game apis
+- create game   - post method - http://localhost:5000/game
+- verify word   - post method - http://localhost:5000/game/verify
+
+
+
+
+
+
+
+
+
+
+
+
