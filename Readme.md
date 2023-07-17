@@ -54,7 +54,7 @@ The response should be like this
 - delete word - delete method - http://localhost:5000/word/:id
 
 # Game apis
-- create game   - post method - http://localhost:5000/game
+- create game   - post method - http://localhost:5000/game/new
 - verify word   - post method - http://localhost:5000/game/verify
 
 
